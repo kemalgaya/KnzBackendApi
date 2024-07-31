@@ -2214,7 +2214,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
         }
         #endregion
 
-        dvsdvsdv
+
         #region Urunler
 
         public List<Urunler.KNZ_URUNLER> DefUrunler(string PKID = "", string pORDERBY = "")
