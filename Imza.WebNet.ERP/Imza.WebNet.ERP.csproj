@@ -215,6 +215,9 @@
     <Compile Include="Models\TableModel\KnzTable\Comment.cs" />
     <Compile Include="Models\TableModel\KnzTable\Contact.cs" />
     <Compile Include="Models\TableModel\KnzTable\Customer.cs" />
+    <Compile Include="Models\TableModel\KnzTable\DosyaEki.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Kampanyalar.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Referans.cs" />
     <Compile Include="Models\TableModel\KnzTable\Slider.cs" />
     <Compile Include="Models\TableModel\KnzTable\UrunGorsel.cs" />
     <Compile Include="Models\TableModel\KnzTable\Urunler.cs" />

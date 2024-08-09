@@ -2798,7 +2798,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
         #region Kampanyalar
 
-        public List<UrunGorsel.KNZ_URUNGORSEL> DefUrunGorsel(string PKID = "", string pORDERBY = "")
+        public List<Kampanyalar.KNZ_KAMPANYALAR> DefKampanyalar(string PKID = "", string pORDERBY = "")
         {
             StringBuilder sb = new StringBuilder();
             if (!string.IsNullOrEmpty(PKID))
@@ -2813,21 +2813,25 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                     ob.Append($" ORDER BY INSERT_DATE DESC");
             }
 
-            var dtTable = SQL.GetDataTable($"select * from KNZ_URUNGORSEL where STATE = 1 {sb.ToString()} {ob.ToString()}");
+            var dtTable = SQL.GetDataTable($"select * from KNZ_KAMPANYALAR where STATE = 1 {sb.ToString()} {ob.ToString()}");
 
 
             if (dtTable.Rows.Count > 0)
             {
 
-                List<UrunGorsel.KNZ_URUNGORSEL> iDefGenel = new List<UrunGorsel.KNZ_URUNGORSEL>();
+                List<Kampanyalar.KNZ_KAMPANYALAR> iDefGenel = new List<Kampanyalar.KNZ_KAMPANYALAR>();
 
                 for (int i = 0; i < dtTable.Rows.Count; i++)
                 {
-                    UrunGorsel.KNZ_URUNGORSEL def = new UrunGorsel.KNZ_URUNGORSEL
+                    Kampanyalar.KNZ_KAMPANYALAR def = new Kampanyalar.KNZ_KAMPANYALAR
                     {
                         ID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["ID"], "0")),
-                        URUNID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["URUNID"], "0")),
+                        ADI = Utility.Nvl(dtTable.Rows[i]["ADI"]),
+                        OZELLIK = Utility.Nvl(dtTable.Rows[i]["OZELLIK"]),
+                        BITISTARIHI = Utility.Nvl(dtTable.Rows[i]["BITISTARIHI"]),
+                        MUSTERIGRUBUID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["MUSTERIGRUBUID"], "0")),
                         DOSYAYOLU = Utility.Nvl(dtTable.Rows[i]["DOSYAYOLU"]),
+                        DOSYAYOLU2 = Utility.Nvl(dtTable.Rows[i]["DOSYAYOLU2"]),
 
                         INSERT_USERID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["INSERT_USERID"], "0")),
                         INSERT_DATE = Utility.Nvl(dtTable.Rows[i]["INSERT_DATE"]),
@@ -2843,7 +2847,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
             return null;
         }
-        public JsonResult getUrunGorsel(string PKID = "", string pORDERBY = "")
+        public JsonResult getKampanyalar(string PKID = "", string pORDERBY = "")
         {
             try
             {
@@ -2857,9 +2861,9 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
                 #endregion
 
-                getAllUrunGorselData tumveriler = new getAllUrunGorselData
+                getAllKampanyalarData tumveriler = new getAllKampanyalarData
                 {
-                    KNZ_URUNGORSEL = DefUrunGorsel(PKID, pORDERBY),
+                    KNZ_KAMPANYALAR = DefKampanyalar(PKID, pORDERBY),
 
                 };
 
@@ -2871,7 +2875,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
             }
         }
         [System.Web.Mvc.HttpPost]
-        public JsonResult AddUrunGorsel([FromBody] FormCollection collection, string pToken, string pUSERID)
+        public JsonResult AddKampanyalar([FromBody] FormCollection collection, string pToken, string pUSERID)
         {
             #region Token Kontrolü
 
@@ -2893,10 +2897,11 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                 //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server);
                 //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server);
 
-                collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_URUNGORSEL", "DOSYAYOLU", Request, Server);
+                collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_KAMPANYALAR", "DOSYAYOLU", Request, Server);
+                collection["DOSYAYOLU2"] = new FormUtils().FileUpload("KNZ_KAMPANYALAR", "DOSYAYOLU2", Request, Server);
 
-                var dbOp = new ImzaData.Ops { _TableName = $"KNZ_URUNGORSEL" };
-                var ID = Utility.Nvl(dbStaticUtils.GetSequenceValue($"SQE_KNZ_URUNGORSEL_ID"));
+                var dbOp = new ImzaData.Ops { _TableName = $"KNZ_KAMPANYALAR" };
+                var ID = Utility.Nvl(dbStaticUtils.GetSequenceValue($"SQE_KNZ_KAMPANYALAR_ID"));
 
 
                 var x = dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1"), "1", false, ID, "ID"), "Yeni kayıt başarıyla tamamlandı.");
@@ -2927,7 +2932,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
         }
         [System.Web.Mvc.HttpPost]
-        public JsonResult UpdateUrunGorsel([FromBody] FormCollection collection, string pToken, string pUSERID, string PKID)
+        public JsonResult UpdateKampanyalar([FromBody] FormCollection collection, string pToken, string pUSERID, string PKID)
         {
             #region Token Kontrolü
 
@@ -2951,7 +2956,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                 {
                     sb.Append($"");
                 }
-                var dtTable = SQL.GetDataTable($"select * from KNZ_URUNLER {sb.ToString()}");
+                var dtTable = SQL.GetDataTable($"select * from KNZ_KAMPANYALAR {sb.ToString()}");
                 //var dtTable = SQL.GetDataTable($"select * from AUTH_USERS where USERID = {PKID} ");
 
                 if (dtTable.Rows.Count == 1)
@@ -2963,13 +2968,14 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                     //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileVCA"]));
                     //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOZLESME"]));
                     //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
-                    collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_URUNGORSEL", "DOSYAYOLU", Request, Server);
+                    collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_KAMPANYALAR", "DOSYAYOLU", Request, Server);
+                    collection["DOSYAYOLU2"] = new FormUtils().FileUpload("KNZ_KAMPANYALAR", "DOSYAYOLU2", Request, Server);
 
 
-                    var vdbOp = new ImzaData.Ops { _TableName = $"KNZ_URUNGORSEL" };
+                    var vdbOp = new ImzaData.Ops { _TableName = $"KNZ_KAMPANYALAR" };
 
                     //var vSonuc = vdbOp.Update(collection, "PERSONEL_TANIM",$" ID = {id}");
-                    vdbOp.Result(vdbOp.Update(collection, $"KNZ_URUNGORSEL", $" ID = {PKID}"), "Kayıt Bilgileri Başarıyla Güncellendi");
+                    vdbOp.Result(vdbOp.Update(collection, $"KNZ_KAMPANYALAR", $" ID = {PKID}"), "Kayıt Bilgileri Başarıyla Güncellendi");
 
                     //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
                     //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
@@ -3005,7 +3011,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                 return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
             }
         }
-        public JsonResult DeleteUrunGorsel(string pToken, string PKID)
+        public JsonResult DeleteKampanyalar(string pToken, string PKID)
         {
             #region Token Kontrolü
 
@@ -3022,7 +3028,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
 
 
-                var dtable = SQL.GetDataTable($" select * from KNZ_URUNGORSEL where ID={PKID}");
+                var dtable = SQL.GetDataTable($" select * from KNZ_KAMPANYALAR where ID={PKID}");
 
 
 
@@ -3038,8 +3044,9 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                     //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
 
                     string dosyaYol = Utility.Nvl(dtable.Rows[0]["DOSYAYOLU"]);
+                    string dosyaYol2 = Utility.Nvl(dtable.Rows[0]["DOSYAYOLU2"]);
 
-                    var x = SQL.ExecuteNonQuery($"delete from KNZ_URUNGORSEL where  ID={PKID}");
+                    var x = SQL.ExecuteNonQuery($"delete from KNZ_KAMPANYALAR where  ID={PKID}");
 
                     //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
                     //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
@@ -3050,14 +3057,18 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                         {
                             new FormUtils().FileDelete(dosyaYol, Server);
                         }
+                        if (!string.IsNullOrEmpty(dosyaYol2))
+                        {
+                            new FormUtils().FileDelete(dosyaYol2, Server);
+                        }
                         //SQL.ExecuteNonQuery($"delete from KNZ_URUNGORSEL where  URUNID={PKID}");
 
-                        return Json(new { data = "", success = true, status = 999, statusText = "Başarıyla Ürün Kaldırıldı" });
+                        return Json(new { data = "", success = true, status = 999, statusText = "Başarıyla Kampanya Kaldırıldı" });
 
                     }
                     else
                     {
-                        return Json(new { data = "", success = false, status = 999, statusText = "Ürün Görselleri Kaldırılırken Hata Oluştu" });
+                        return Json(new { data = "", success = false, status = 999, statusText = "Kampanya Kaldırılırken Hata Oluştu" });
 
                     }
 
@@ -3078,6 +3089,583 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
             }
         }
         #endregion
+
+
+        #region Referans
+
+        public List<Referans.KNZ_REFERANS> DefReferans(string PKID = "", string pORDERBY = "")
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(PKID))
+            {
+                sb.Append($" AND ID={PKID}");
+            }
+
+            StringBuilder ob = new StringBuilder();
+            if (!string.IsNullOrEmpty(pORDERBY))
+            {
+                if (pORDERBY == "1")
+                    ob.Append($" ORDER BY INSERT_DATE DESC");
+            }
+
+            var dtTable = SQL.GetDataTable($"select * from KNZ_REFERANS where STATE = 1 {sb.ToString()} {ob.ToString()}");
+
+
+            if (dtTable.Rows.Count > 0)
+            {
+
+                List<Referans.KNZ_REFERANS> iDefGenel = new List<Referans.KNZ_REFERANS>();
+
+                for (int i = 0; i < dtTable.Rows.Count; i++)
+                {
+                    Referans.KNZ_REFERANS def = new Referans.KNZ_REFERANS
+                    {
+                        ID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["ID"], "0")),
+                        ADI = Utility.Nvl(dtTable.Rows[i]["ADI"]),
+                        SOYADI = Utility.Nvl(dtTable.Rows[i]["SOYADI"]),
+                        FIRMA = Utility.Nvl(dtTable.Rows[i]["FIRMA"]),
+                        MAIL = Utility.Nvl(dtTable.Rows[i]["MAIL"]),
+                        TELEFON = Utility.Nvl(dtTable.Rows[i]["TELEFON"]),
+                        ADRES = Utility.Nvl(dtTable.Rows[i]["ADRES"]),
+                        DOSYAYOLU = Utility.Nvl(dtTable.Rows[i]["DOSYAYOLU"]),
+                        ACIKLAMA = Utility.Nvl(dtTable.Rows[i]["ACIKLAMA"]),
+
+                        INSERT_USERID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["INSERT_USERID"], "0")),
+                        INSERT_DATE = Utility.Nvl(dtTable.Rows[i]["INSERT_DATE"]),
+                        COMPANYID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["COMPANYID"], "0")),
+                        STATE = Convert.ToBoolean(Utility.Nvl(dtTable.Rows[i]["STATE"], "0"))
+                    };
+
+                    iDefGenel.Add(def);
+                }
+
+                return iDefGenel.ToList();
+            }
+
+            return null;
+        }
+        public JsonResult getReferans(string PKID = "", string pORDERBY = "")
+        {
+            try
+            {
+                #region Token Kontrolü
+
+                //var vCheckToken = new iTools.token().CheckToken(pToken);
+                //if (new iTools.token().CheckToken(pToken) != "1")
+                //{
+                //    return Json(new { success = false, status = 555, statusText = vCheckToken });
+                //}
+
+                #endregion
+
+                getAllReferansData tumveriler = new getAllReferansData
+                {
+                    KNZ_REFERANS = DefReferans(PKID, pORDERBY),
+
+                };
+
+                return Json(new { data = tumveriler, success = true, status = 999, statusText = "Sunucudan Bilgiler Alındı" });
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = "Veri Listesi Alınırken Hata Oluştu => " + e.Message });
+            }
+        }
+        [System.Web.Mvc.HttpPost]
+        public JsonResult AddReferans([FromBody] FormCollection collection, string pToken, string pUSERID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+                //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server);
+                //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server);
+                //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server);
+                //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server);
+                //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server);
+                //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server);
+                //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server);
+
+                collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_REFERANS", "DOSYAYOLU", Request, Server);
+ 
+                var dbOp = new ImzaData.Ops { _TableName = $"KNZ_REFERANS" };
+                var ID = Utility.Nvl(dbStaticUtils.GetSequenceValue($"SQE_KNZ_REFERANS_ID"));
+
+
+                var x = dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1"), "1", false, ID, "ID"), "Yeni kayıt başarıyla tamamlandı.");
+                // var editState = SQL.ExecuteScalar($"update AUTH_USERS SET STATE=1 where ID={ID}");
+                if (dbOp.success)
+                {
+
+
+
+                    return Json(new { data = ID, success = true, status = 999, statusText = "Veri Sisteme Başarıyla Kaydedildi." });
+                }
+                else
+                {
+                    if (dbOp.error)
+                    {
+                        return Json(new { data = "", success = false, status = 402, statusText = "Veri Kaydedilirken Hata Oluştu" });
+                    }
+                    else
+                    {
+                        return Json(new { data = "", success = false, status = 401, statusText = "Lütfen Gerekli Alanları Doldurunuz" });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = "Veri Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+
+        }
+        [System.Web.Mvc.HttpPost]
+        public JsonResult UpdateReferans([FromBody] FormCollection collection, string pToken, string pUSERID, string PKID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+
+                StringBuilder sb = new StringBuilder();
+                if (!string.IsNullOrEmpty(PKID))
+                {
+                    sb.Append($" where ID={PKID}");
+                }
+                else
+                {
+                    sb.Append($"");
+                }
+                var dtTable = SQL.GetDataTable($"select * from KNZ_REFERANS {sb.ToString()}");
+                //var dtTable = SQL.GetDataTable($"select * from AUTH_USERS where USERID = {PKID} ");
+
+                if (dtTable.Rows.Count == 1)
+                {
+                    //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server, Utility.Nvl(dtTable.Rows[0]["filePERSONELRESIM"]));
+                    //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOSYALGUVENLIK"]));
+                    //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKIMLIKTURU"]));
+                    //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileCALISMAIZNI"]));
+                    //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileVCA"]));
+                    //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOZLESME"]));
+                    //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
+                    collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_REFERANS", "DOSYAYOLU", Request, Server);
+ 
+
+                    var vdbOp = new ImzaData.Ops { _TableName = $"KNZ_REFERANS" };
+
+                    //var vSonuc = vdbOp.Update(collection, "PERSONEL_TANIM",$" ID = {id}");
+                    vdbOp.Result(vdbOp.Update(collection, $"KNZ_REFERANS", $" ID = {PKID}"), "Kayıt Bilgileri Başarıyla Güncellendi");
+
+                    //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
+                    //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
+
+                    if (vdbOp.success)
+                    {
+
+                        return Json(new { data = "", success = true, status = 999, statusText = "Veriler Bilgisi Başarıyla Güncellendi." });
+                    }
+                    else
+                    {
+                        if (vdbOp.error)
+                        {
+                            return Json(new { data = "", success = false, status = 402, statusText = "Veriler Kaydedilirken Hata Oluştu" });
+                        }
+                        else
+                        {
+                            return Json(new { data = "", success = false, status = 401, statusText = "Lütfen Gerekli Alanları Doldurunuz" });
+                        }
+                    }
+
+
+                }
+                else
+                {
+
+                    return Json(new { data = "", success = false, status = 401, statusText = $"{PKID} ID nolu Data bulunamadığı için düzenleme yapılamaz." });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+        }
+        public JsonResult DeleteReferans(string pToken, string PKID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+
+
+
+                var dtable = SQL.GetDataTable($" select * from KNZ_REFERANS where ID={PKID}");
+
+
+
+
+                if (dtable.Rows.Count > 0)
+                {
+                    //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server, Utility.Nvl(dtTable.Rows[0]["filePERSONELRESIM"]));
+                    //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOSYALGUVENLIK"]));
+                    //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKIMLIKTURU"]));
+                    //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileCALISMAIZNI"]));
+                    //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileVCA"]));
+                    //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOZLESME"]));
+                    //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
+
+                    string dosyaYol = Utility.Nvl(dtable.Rows[0]["DOSYAYOLU"]);
+ 
+                    var x = SQL.ExecuteNonQuery($"delete from KNZ_REFERANS where  ID={PKID}");
+
+                    //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
+                    //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
+
+                    if (x == "1")
+                    {
+                        if (!string.IsNullOrEmpty(dosyaYol))
+                        {
+                            new FormUtils().FileDelete(dosyaYol, Server);
+                        } 
+                        //SQL.ExecuteNonQuery($"delete from KNZ_URUNGORSEL where  URUNID={PKID}");
+
+                        return Json(new { data = "", success = true, status = 999, statusText = "Başarıyla Kampanya Kaldırıldı" });
+
+                    }
+                    else
+                    {
+                        return Json(new { data = "", success = false, status = 999, statusText = "Referans Kaldırılırken Hata Oluştu" });
+
+                    }
+
+
+
+
+                }
+                else
+                {
+
+                    return Json(new { data = "", success = false, status = 401, statusText = $"Hata Oluştu" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+        }
+        #endregion
+
+
+        #region DosyaEki
+
+        public List<DosyaEki.KNZ_DOSYAEKI> DefDosyaEki(string PKID = "", string pORDERBY = "")
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(PKID))
+            {
+                sb.Append($" AND ID={PKID}");
+            }
+
+            StringBuilder ob = new StringBuilder();
+            if (!string.IsNullOrEmpty(pORDERBY))
+            {
+                if (pORDERBY == "1")
+                    ob.Append($" ORDER BY INSERT_DATE DESC");
+            }
+
+            var dtTable = SQL.GetDataTable($"select * from KNZ_DOSYAEKI where STATE = 1 {sb.ToString()} {ob.ToString()}");
+
+
+            if (dtTable.Rows.Count > 0)
+            {
+
+                List<DosyaEki.KNZ_DOSYAEKI> iDefGenel = new List<DosyaEki.KNZ_DOSYAEKI>();
+
+                for (int i = 0; i < dtTable.Rows.Count; i++)
+                {
+                    DosyaEki.KNZ_DOSYAEKI def = new DosyaEki.KNZ_DOSYAEKI
+                    {
+                        ID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["ID"], "0")),
+                        ADI = Utility.Nvl(dtTable.Rows[i]["ADI"]),
+                        DOSYATURUID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["DOSYATURUID"], "0")), 
+                        DOSYAYOLU = Utility.Nvl(dtTable.Rows[i]["DOSYAYOLU"]),
+                        ACIKLAMA = Utility.Nvl(dtTable.Rows[i]["ACIKLAMA"]),
+
+                        INSERT_USERID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["INSERT_USERID"], "0")),
+                        INSERT_DATE = Utility.Nvl(dtTable.Rows[i]["INSERT_DATE"]),
+                        COMPANYID = Convert.ToInt32(Utility.Nvl(dtTable.Rows[i]["COMPANYID"], "0")),
+                        STATE = Convert.ToBoolean(Utility.Nvl(dtTable.Rows[i]["STATE"], "0"))
+                    };
+
+                    iDefGenel.Add(def);
+                }
+
+                return iDefGenel.ToList();
+            }
+
+            return null;
+        }
+        public JsonResult getDosyaEki(string PKID = "", string pORDERBY = "")
+        {
+            try
+            {
+                #region Token Kontrolü
+
+                //var vCheckToken = new iTools.token().CheckToken(pToken);
+                //if (new iTools.token().CheckToken(pToken) != "1")
+                //{
+                //    return Json(new { success = false, status = 555, statusText = vCheckToken });
+                //}
+
+                #endregion
+
+                getAllDosyaEkiData tumveriler = new getAllDosyaEkiData
+                {
+                    KNZ_DOSYAEKI = DefDosyaEki(PKID, pORDERBY),
+
+                };
+
+                return Json(new { data = tumveriler, success = true, status = 999, statusText = "Sunucudan Bilgiler Alındı" });
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = "Veri Listesi Alınırken Hata Oluştu => " + e.Message });
+            }
+        }
+        [System.Web.Mvc.HttpPost]
+        public JsonResult AddDosyaEki([FromBody] FormCollection collection, string pToken, string pUSERID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+                //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server);
+                //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server);
+                //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server);
+                //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server);
+                //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server);
+                //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server);
+                //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server);
+
+                collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_DOSYAEKI", "DOSYAYOLU", Request, Server);
+
+                var dbOp = new ImzaData.Ops { _TableName = $"KNZ_DOSYAEKI" };
+                var ID = Utility.Nvl(dbStaticUtils.GetSequenceValue($"SQE_KNZ_DOSYAEKI_ID"));
+
+
+                var x = dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1"), "1", false, ID, "ID"), "Yeni kayıt başarıyla tamamlandı.");
+                // var editState = SQL.ExecuteScalar($"update AUTH_USERS SET STATE=1 where ID={ID}");
+                if (dbOp.success)
+                {
+
+
+
+                    return Json(new { data = ID, success = true, status = 999, statusText = "Veri Sisteme Başarıyla Kaydedildi." });
+                }
+                else
+                {
+                    if (dbOp.error)
+                    {
+                        return Json(new { data = "", success = false, status = 402, statusText = "Veri Kaydedilirken Hata Oluştu" });
+                    }
+                    else
+                    {
+                        return Json(new { data = "", success = false, status = 401, statusText = "Lütfen Gerekli Alanları Doldurunuz" });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = "Veri Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+
+        }
+        [System.Web.Mvc.HttpPost]
+        public JsonResult UpdateDosyaEki([FromBody] FormCollection collection, string pToken, string pUSERID, string PKID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+
+                StringBuilder sb = new StringBuilder();
+                if (!string.IsNullOrEmpty(PKID))
+                {
+                    sb.Append($" where ID={PKID}");
+                }
+                else
+                {
+                    sb.Append($"");
+                }
+                var dtTable = SQL.GetDataTable($"select * from KNZ_DOSYAEKI {sb.ToString()}");
+                //var dtTable = SQL.GetDataTable($"select * from AUTH_USERS where USERID = {PKID} ");
+
+                if (dtTable.Rows.Count == 1)
+                {
+                    //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server, Utility.Nvl(dtTable.Rows[0]["filePERSONELRESIM"]));
+                    //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOSYALGUVENLIK"]));
+                    //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKIMLIKTURU"]));
+                    //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileCALISMAIZNI"]));
+                    //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileVCA"]));
+                    //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOZLESME"]));
+                    //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
+                    collection["DOSYAYOLU"] = new FormUtils().FileUpload("KNZ_DOSYAEKI", "DOSYAYOLU", Request, Server);
+
+
+                    var vdbOp = new ImzaData.Ops { _TableName = $"KNZ_DOSYAEKI" };
+
+                    //var vSonuc = vdbOp.Update(collection, "PERSONEL_TANIM",$" ID = {id}");
+                    vdbOp.Result(vdbOp.Update(collection, $"KNZ_DOSYAEKI", $" ID = {PKID}"), "Kayıt Bilgileri Başarıyla Güncellendi");
+
+                    //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
+                    //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
+
+                    if (vdbOp.success)
+                    {
+
+                        return Json(new { data = "", success = true, status = 999, statusText = "Veriler Bilgisi Başarıyla Güncellendi." });
+                    }
+                    else
+                    {
+                        if (vdbOp.error)
+                        {
+                            return Json(new { data = "", success = false, status = 402, statusText = "Veriler Kaydedilirken Hata Oluştu" });
+                        }
+                        else
+                        {
+                            return Json(new { data = "", success = false, status = 401, statusText = "Lütfen Gerekli Alanları Doldurunuz" });
+                        }
+                    }
+
+
+                }
+                else
+                {
+
+                    return Json(new { data = "", success = false, status = 401, statusText = $"{PKID} ID nolu Data bulunamadığı için düzenleme yapılamaz." });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+        }
+        public JsonResult DeleteDosyaEki(string pToken, string PKID)
+        {
+            #region Token Kontrolü
+
+            var vCheckToken = new iTools.token().CheckToken(pToken);
+            if (new iTools.token().CheckToken(pToken) != "1")
+            {
+                return Json(new { success = false, status = 555, statusText = vCheckToken });
+            }
+
+            #endregion
+
+            try
+            {
+
+
+
+                var dtable = SQL.GetDataTable($" select * from KNZ_DOSYAEKI where ID={PKID}");
+
+
+
+
+                if (dtable.Rows.Count > 0)
+                {
+                    //collection["filePERSONELRESIM"] = new FormUtils().FileUpload("PERSONEL_TANIM", "filePERSONELRESIM", Request, Server, Utility.Nvl(dtTable.Rows[0]["filePERSONELRESIM"]));
+                    //collection["fileSOSYALGUVENLIK"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOSYALGUVENLIK", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOSYALGUVENLIK"]));
+                    //collection["fileKIMLIKTURU"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKIMLIKTURU", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKIMLIKTURU"]));
+                    //collection["fileCALISMAIZNI"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileCALISMAIZNI", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileCALISMAIZNI"]));
+                    //collection["fileVCA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileVCA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileVCA"]));
+                    //collection["fileSOZLESME"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileSOZLESME", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileSOZLESME"]));
+                    //collection["fileKVK_WKA"] = new FormUtils().FileUpload("PERSONEL_TANIM", "fileKVK_WKA", Request, Server, Utility.Nvl(dtTable.Rows[0]["fileKVK_WKA"]));
+
+                    string dosyaYol = Utility.Nvl(dtable.Rows[0]["DOSYAYOLU"]);
+
+                    var x = SQL.ExecuteNonQuery($"delete from KNZ_DOSYAEKI where  ID={PKID}");
+
+                    //var dbOp = new ImzaData.Ops { _TableName = "PERSONEL_TANIM" };
+                    //dbOp.ResultForApi(dbOp.InsertApi(collection, "1", Utility.Nvl(pUSERID, "-1")), "Yeni kayıt başarıyla tamamlandı.", "");
+
+                    if (x == "1")
+                    {
+                        if (!string.IsNullOrEmpty(dosyaYol))
+                        {
+                            new FormUtils().FileDelete(dosyaYol, Server);
+                        }
+                        //SQL.ExecuteNonQuery($"delete from KNZ_URUNGORSEL where  URUNID={PKID}");
+
+                        return Json(new { data = "", success = true, status = 999, statusText = "Başarıyla Kampanya Kaldırıldı" });
+
+                    }
+                    else
+                    {
+                        return Json(new { data = "", success = false, status = 999, statusText = "Referans Kaldırılırken Hata Oluştu" });
+
+                    }
+
+
+
+
+                }
+                else
+                {
+
+                    return Json(new { data = "", success = false, status = 401, statusText = $"Hata Oluştu" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
+            }
+        }
+        #endregion
+
 
 
 

@@ -178,6 +178,21 @@ namespace Imza.WebNet.Erp.Models.Mobil
         public IList KNZ_URUNGORSEL { get; set; }
 
     }
+    public class getAllKampanyalarData
+    {
+        public IList KNZ_KAMPANYALAR { get; set; }
+
+    }
+    public class getAllReferansData
+    {
+        public IList KNZ_REFERANS { get; set; }
+
+    }
+    public class getAllDosyaEkiData
+    {
+        public IList KNZ_DOSYAEKI { get; set; }
+
+    }
 
 
 
