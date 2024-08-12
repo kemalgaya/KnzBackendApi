@@ -1637,7 +1637,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                 else
                 {
 
-                    return Json(new { data = "", success = false, status = 401, statusText = $"Hata Oluştu" });
+                    return Json(new { data = "", success = false, status = 401, statusText = $"Aradığınız veri bulunamadı." });
                 }
 
             }
@@ -2667,7 +2667,7 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
                 {
                     sb.Append($"");
                 }
-                var dtTable = SQL.GetDataTable($"select * from KNZ_URUNLER {sb.ToString()}");
+                var dtTable = SQL.GetDataTable($"select * from KNZ_URUNGORSEL {sb.ToString()}");
                 //var dtTable = SQL.GetDataTable($"select * from AUTH_USERS where USERID = {PKID} ");
 
                 if (dtTable.Rows.Count == 1)
