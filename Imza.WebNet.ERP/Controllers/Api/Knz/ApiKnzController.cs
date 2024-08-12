@@ -138,17 +138,17 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
 
             return null;
         }
-        public JsonResult getTanimTable(string pToken, string pTableName)
+        public JsonResult getTanimTable( string pTableName)
         {
             try
             {
                 #region Token Kontrolü
 
-                var vCheckToken = new iTools.token().CheckToken(pToken);
-                if (new iTools.token().CheckToken(pToken) != "1")
-                {
-                    return Json(new { success = false, status = 555, statusText = vCheckToken });
-                }
+                //var vCheckToken = new iTools.token().CheckToken(pToken);
+                //if (new iTools.token().CheckToken(pToken) != "1")
+                //{
+                //    return Json(new { success = false, status = 555, statusText = vCheckToken });
+                //}
 
                 #endregion
 
