@@ -14,6 +14,7 @@ using Imza.WebNet.Erp.Models.Mobil;
 using Imza.WebNet.Erp.Models.TableModel;
 using Imza.WebNet.ERP.Models.TableModel.KnzTable;
 using Imza.WebTools.Classes;
+using Imza.WebTools.Classes.ImzaBase;
 
 
 namespace Imza.WebNet.ERP.Controllers.Api.Knz
@@ -5915,6 +5916,12 @@ namespace Imza.WebNet.ERP.Controllers.Api.Knz
             {
                 return Json(new { data = "", success = false, status = 402, statusText = " Kaydedilirken Hata Oluştu => " + e.Message });
             }
+        }
+
+        public string temp(string temp)
+        {
+            var x = ImzaCrypt.Cryptation.DeCrypt(temp);
+            return x;
         }
 
         #endregion

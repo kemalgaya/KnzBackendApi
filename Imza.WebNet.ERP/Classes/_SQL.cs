@@ -21,6 +21,7 @@ namespace Imza.WebNet.Erp.Classes
 
         public static string CheckLogin(string pUsername, string pPassword)
         {
+
             if (string.IsNullOrEmpty(_SQL.DataSourcedefault))
                 _SQL.setConfig();
             if (!string.IsNullOrEmpty(pPassword))
@@ -44,10 +45,10 @@ namespace Imza.WebNet.Erp.Classes
                     string[] strArray = str.Split('>');
                     if (strArray.Length != 0)
                     {
-                        if (!string.IsNullOrEmpty(strArray[2].Replace("\r\n", "")))
-                            _SQL.ServerIp = strArray[2].Replace("\r\n", "");
-                        if (!string.IsNullOrEmpty(strArray[4].Replace("\r\n", "")))
-                            _SQL.InstanceName = Utility.Nvl((object)strArray[4].Replace("\r\n", ""));
+                        if (!string.IsNullOrEmpty(strArray[2].Replace("\n", "").Replace("\r", "")))
+                            _SQL.ServerIp = strArray[2].Replace("\n", "").Replace("\r", "");
+                        if (!string.IsNullOrEmpty(strArray[4].Replace("\n", "").Replace("\r", "")))
+                            _SQL.InstanceName = Utility.Nvl((object)strArray[4].Replace("\n", "").Replace("\r",""));
                         if (!string.IsNullOrEmpty(_SQL.ServerIp))
                         {
                             if (!string.IsNullOrEmpty(_SQL.InstanceName))
@@ -55,12 +56,12 @@ namespace Imza.WebNet.Erp.Classes
                             else if (string.IsNullOrEmpty(_SQL.InstanceName) || _SQL.InstanceName == "YOK")
                                 _SQL.DataSourcedefault = string.Format("{0}", (object)_SQL.ServerIp);
                         }
-                        if (!string.IsNullOrEmpty(strArray[6].Replace("\r\n", "")))
-                            _SQL.InitialCatalogDefault = strArray[6].Replace("\r\n", "");
-                        if (!string.IsNullOrEmpty(strArray[8].Replace("\r\n", "")))
-                            _SQL.UserIdDefault = strArray[8].Replace("\r\n", "");
-                        if (!string.IsNullOrEmpty(strArray[10].Replace("\r\n", "")))
-                            _SQL.PasswordDefault = strArray[10].Replace("\r\n", "");
+                        if (!string.IsNullOrEmpty(strArray[6].Replace("\n", "").Replace("\r", "")))
+                            _SQL.InitialCatalogDefault = strArray[6].Replace("\n", "").Replace("\r", "");
+                        if (!string.IsNullOrEmpty(strArray[8].Replace("\n", "").Replace("\r", "")))
+                            _SQL.UserIdDefault = strArray[8].Replace("\n", "").Replace("\r", "");
+                        if (!string.IsNullOrEmpty(strArray[10].Replace("\n", "").Replace("\r", "")))
+                            _SQL.PasswordDefault = strArray[10].Replace("\n", "").Replace("\r", "");
                     }
                 }
                 streamReader.Close();
