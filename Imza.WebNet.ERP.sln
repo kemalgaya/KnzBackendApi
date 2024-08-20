@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.35130.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imza.WebNet.ERP", "Imza.WebNet.ERP\Imza.WebNet.ERP.csproj", "{D2D692F4-0324-45C3-9105-D85CF01A09A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imza.WebTools", "..\..\..\Desktop\ŞİRKET OLUŞUM\Imza.WebTools\Imza.WebTools\Imza.WebTools.csproj", "{721299C1-DA58-42B5-A35E-AEC082D9C51A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imza.WebTools", "..\..\..\Desktop\ŞİRKET OLUŞUM\KNZ\Imza.WebTools\Imza.WebTools\Imza.WebTools.csproj", "{721299C1-DA58-42B5-A35E-AEC082D9C51A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6EBDC3F0-8C65-4438-8127-C4CC3359C816}
 	EndGlobalSection
 EndGlobal

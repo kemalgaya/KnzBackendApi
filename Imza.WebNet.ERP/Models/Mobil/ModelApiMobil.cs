@@ -193,6 +193,41 @@ namespace Imza.WebNet.Erp.Models.Mobil
         public IList KNZ_DOSYAEKI { get; set; }
 
     }
+    public class getAllCategoriesData
+    {
+        public IList CATEGORIES { get; set; }
+
+    }
+    public class getAllMessagesData
+    {
+        public IList MESSAGE { get; set; }
+
+    }
+    public class getAllPostsData
+    {
+        public IList POSTS { get; set; }
+
+    }
+    public class getAllProductsData
+    {
+        public IList PRODUCTS { get; set; }
+
+    }
+    public class getAllProductsHomeData
+    {
+        public IList PRODUCTSHOME { get; set; }
+
+    }
+    public class getAllSiparisData
+    {
+        public IList SIPARIS { get; set; }
+
+    }
+    public class getAllSiparisDetayData
+    {
+        public IList SIPARISDETAY { get; set; }
+
+    }
 
 
 
