@@ -212,12 +212,19 @@
     <Compile Include="Models\TableModel\KartBilgileri.cs" />
     <Compile Include="Models\TableModel\KnzTable\About.cs" />
     <Compile Include="Models\TableModel\KnzTable\Blog.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Categories.cs" />
     <Compile Include="Models\TableModel\KnzTable\Comment.cs" />
     <Compile Include="Models\TableModel\KnzTable\Contact.cs" />
     <Compile Include="Models\TableModel\KnzTable\Customer.cs" />
     <Compile Include="Models\TableModel\KnzTable\DosyaEki.cs" />
     <Compile Include="Models\TableModel\KnzTable\Kampanyalar.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Messages.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Post.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Product.cs" />
+    <Compile Include="Models\TableModel\KnzTable\ProductsHome.cs" />
     <Compile Include="Models\TableModel\KnzTable\Referans.cs" />
+    <Compile Include="Models\TableModel\KnzTable\Siparis.cs" />
+    <Compile Include="Models\TableModel\KnzTable\SiparisDetay.cs" />
     <Compile Include="Models\TableModel\KnzTable\Slider.cs" />
     <Compile Include="Models\TableModel\KnzTable\UrunGorsel.cs" />
     <Compile Include="Models\TableModel\KnzTable\Urunler.cs" />
@@ -322,7 +329,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Desktop\ŞİRKET OLUŞUM\Imza.WebTools\Imza.WebTools\Imza.WebTools.csproj">
+    <ProjectReference Include="..\..\..\..\Desktop\ŞİRKET OLUŞUM\KNZ\Imza.WebTools\Imza.WebTools\Imza.WebTools.csproj">
       <Project>{721299c1-da58-42b5-a35e-aec082d9c51a}</Project>
       <Name>Imza.WebTools</Name>
     </ProjectReference>
